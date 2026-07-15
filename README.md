@@ -12,6 +12,7 @@ VeloHub Orchestrator is an open-source payment orchestration monorepo designed f
   - Redis-backed request idempotency middleware.
   - Audit logging of all database actions.
 - **🛠️ Monorepo Workspaces:** Clean packaging splitting applications and modules.
+- **💻 Live Dashboard Simulator:** An interactive React website simulating payment logs, top-ups, withdrawals, and escrow operations.
 
 ## 🏗️ Project Structure
 
@@ -23,11 +24,28 @@ VeloHub Orchestrator is an open-source payment orchestration monorepo designed f
 │   ├── shared/       # Shared TypeScript DTOs and types
 │   ├── database/     # Prisma Schema and migrations
 │   └── sdk/          # Client SDK for marketplaces integrating VeloHub
+├── frontend/         # React-Vite Interactive Dashboard (GitHub Pages hosted)
 ├── docs/             # Technical specifications & API architecture
 ├── Makefile          # Clean developer shortcut commands
 └── docker-compose.yml
 ```
 
+## 🔗 Live Demo & Website
+
+The interactive **VeloHub Dashboard & Escrow Simulator** is deployed and hosted on GitHub Pages:
+👉 **[Live Website Link](https://ZainabJanee.github.io/velohub/)**
+
+---
+
 ## 🏁 Getting Started
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for step-by-step local developer setup instructions.
+
+### Run Frontend Sandbox locally
+
+Run the React website locally for development:
+```bash
+cd frontend
+npm install
+npm run dev
+```
