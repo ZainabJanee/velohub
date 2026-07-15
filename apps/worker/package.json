@@ -1,0 +1,29 @@
+{
+  "name": "@velohub/worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.3",
+    "@nestjs/core": "^10.3.3",
+    "@nestjs/bullmq": "^10.1.0",
+    "bullmq": "^5.4.0",
+    "ioredis": "^5.3.2",
+    "@velohub/database": "*",
+    "@velohub/shared": "*",
+    "reflect-metadata": "^0.2.1",
+    "rxjs": "^7.8.1",
+    "@stellar/stellar-sdk": "^12.2.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.3.2",
+    "@nestjs/schematics": "^10.1.1",
+    "typescript": "^5.4.2"
+  }
+}

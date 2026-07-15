@@ -1,0 +1,21 @@
+{
+  "name": "@velohub/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "generate": "prisma generate",
+    "migrate": "prisma db push",
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "velohub-orchestrator",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "prisma:generate": "npm run generate --workspace=packages/database",
+    "prisma:migrate": "npm run migrate --workspace=packages/database",
+    "prisma:seed": "npm run seed --workspace=packages/database",
+    "dev": "concurrently \"npm run start:dev --workspace=apps/api\" \"npm run start:dev --workspace=apps/worker\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.2"
+  }
+}

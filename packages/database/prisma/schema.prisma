@@ -1,0 +1,80 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String       @id @default(uuid())
+  email            String       @unique
+  airtmAccount     String
+  availableBalance Decimal      @default(0.0) @db.Decimal(18, 4)
+  reservedBalance  Decimal      @default(0.0) @db.Decimal(18, 4)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  transactions     Transaction[]
+  auditLogs        AuditLog[]
+
+  @@map("users")
+}
+
+enum TransactionType {
+  TOPUP
+  WITHDRAWAL
+  ESCROW_LOCK
+  ESCROW_RELEASE
+  ESCROW_REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model Transaction {
+  id         String            @id @default(uuid())
+  userId     String
+  type       TransactionType
+  amount     Decimal           @db.Decimal(18, 4)
+  status     TransactionStatus @default(PENDING)
+  reference  String?           // Airtm transaction ID or Stellar Tx Hash
+  createdAt  DateTime          @default(now())
+  user       User              @relation(fields: [userId], references: [id])
+
+  @@map("transactions")
+}
+
+enum EscrowStatus {
+  PENDING
+  RELEASED
+  REFUNDED
+}
+
+model Escrow {
+  id                String       @id @default(uuid())
+  clientId          String
+  providerId        String
+  amount            Decimal      @db.Decimal(18, 4)
+  status            EscrowStatus @default(PENDING)
+  stellarEscrowId   String?      // Reference to the on-chain Trustless Work escrow ID
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@map("escrows")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  details   String
+  ipAddress String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}

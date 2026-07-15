@@ -1,0 +1,77 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-development:
+    name: Deploy to Development (Testnet)
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Build WASM Contract
+        run: cargo build --release --target wasm32-unknown-unknown
+
+      - name: Install Stellar CLI
+        run: |
+          curl -sSf https://raw.githubusercontent.com/stellar/stellar-cli/main/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Deploy Contract to Testnet (Dev)
+        run: |
+          echo "Deploying to Stellar Testnet (Development)..."
+          # In real execution, this would run:
+          # stellar contract deploy --wasm target/wasm32-unknown-unknown/release/solaspay.wasm --source-account ${{ secrets.DEV_DEPLOYER_SECRET }} --network testnet
+
+  deploy-staging:
+    name: Deploy to Staging (Testnet)
+    needs: deploy-development
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Build WASM Contract
+        run: cargo build --release --target wasm32-unknown-unknown
+
+      - name: Deploy Contract to Testnet (Staging)
+        run: |
+          echo "Deploying to Stellar Testnet (Staging)..."
+          # stellar contract deploy --wasm target/wasm32-unknown-unknown/release/solaspay.wasm --source-account ${{ secrets.STAGE_DEPLOYER_SECRET }} --network testnet
+
+  deploy-production:
+    name: Deploy to Production (Mainnet)
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production # Triggers GitHub Environment manual approval gates
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Build WASM Contract
+        run: cargo build --release --target wasm32-unknown-unknown
+
+      - name: Deploy Contract to Mainnet (Production)
+        run: |
+          echo "Deploying to Stellar Mainnet (Production)..."
+          # stellar contract deploy --wasm target/wasm32-unknown-unknown/release/solaspay.wasm --source-account ${{ secrets.PROD_DEPLOYER_SECRET }} --network mainnet
